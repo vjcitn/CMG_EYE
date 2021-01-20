@@ -40,7 +40,7 @@ names(subjtab)
 
 ## The sample table
 
-```{r stab}
+```{r satab}
 samptab = avtable("sample")
 dim(samptab)
 names(samptab)
