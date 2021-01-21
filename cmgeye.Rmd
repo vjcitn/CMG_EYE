@@ -99,6 +99,11 @@ mm %>% select(`pfb:phenotype_description`, `pfb:seq_filename`, `pfb:ga4gh_drs_ur
   filter(`pfb:phenotype_description`=="Retinitis pigmentosa")
 ```
 
+# Conclusions
+
+This document illustrated simple activities with AnVIL package and AnVIL
+data from CMG.
+
 
 
 
