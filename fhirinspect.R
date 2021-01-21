@@ -1,6 +1,10 @@
 library(shiny)
+# expectation is that source("fhirinspect.R", echo=TRUE) is run in folder
+# holding the various WGS and WES projects, each holding a collection of JSON
+# documents
 
 allproj = dir()
+
 #x = readLines("AnVIL_CMG_Broad_Eye_Pierce_WGS/Observation.json")
 #dem = jsonlite::fromJSON(x[1])
 
