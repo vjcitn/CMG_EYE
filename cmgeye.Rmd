@@ -102,7 +102,7 @@ mm %>% select(`pfb:phenotype_description`, `pfb:seq_filename`, `pfb:ga4gh_drs_ur
 # Conclusions
 
 This document illustrated simple activities with AnVIL package and AnVIL
-data from CMG.
+data from CMG.  Our next document will embed a shiny app.
 
 
 
