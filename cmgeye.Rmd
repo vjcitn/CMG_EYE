@@ -18,13 +18,19 @@ output:
 
 The CMG Eye workspace was created to work with a small collection
 of records from CMG, created through Gen3 operations using
-`gen3.theanvil.io/explore`.
+`gen3.theanvil.io/explore`.  See the appendix for some special
+considerations about using RStudio in AnVIL for this particular
+workbook.
 
 Our first objective is to review tables of subject and sample
 characteristics.
 
 ```{r start}
-library(AnVIL)
+suppressPackageStartupMessages({
+  library(AnVIL)
+  library(DT)
+  library(ggplot2)
+  })
 avworkspace("use-strides/CMG Eye")  # declares until reset
 tabs = avtables()
 tabs
@@ -46,3 +52,60 @@ dim(samptab)
 names(samptab)
 ```
 
+Let's have a searchable table:
+```{r dodt}
+datatable(samptab)
+```
+
+# Working with the sequencing data
+
+## Basic data table
+
+```{r lkseq}
+seqtab = avtable("sequencing")
+datatable(seqtab)
+```
+
+Check the distribution of sequencing depths:
+```{r dohist}
+ggplot(seqtab, aes(x=`pfb:total_reads`)) + geom_histogram()
+```
+
+## Acquire a CRAM file and its index
+
+Here we pick records using an identifier prefix for a single contributor,
+and convert DRS to google storage identifiers.
+```{r filt}
+drs_pair = seqtab %>% filter(grepl("PIE_OGI001_000346_1", `pfb:seq_filename`)) %>%
+    select(`pfb:ga4gh_drs_uri`) %>% as.data.frame
+drs_pair[[1]]
+gsu = drs_stat(drs_pair[[1]])$gsUri
+gsu
+```
+We'll use AnVIL to copy the CRAM and CRAI to our local folder.
+```{r drscp}
+drs_cp(drs_pair[[1]], ".")
+dir(patt="cram")
+```
+
+## Filter a selection of CRAM files based on phenotype
+
+```{r dojoin}
+mm = left_join(subjtab, mutate(seqtab, 
+  `pfb:participant_id`=gsub(".cram", "", `pfb:file_name`)), 
+  by="pfb:participant_id")
+dim(mm)
+mm %>% select(`pfb:phenotype_description`, `pfb:seq_filename`, `pfb:ga4gh_drs_uri`) %>%    
+  filter(`pfb:phenotype_description`=="Retinitis pigmentosa")
+```
+
+
+
+
+# Appendix
+
+This workbook is generated within RStudio in AnVIL as a project that is version-controlled.
+The repo `github.com/vjcitn/CMG_EYE` is used to manage the R markdown.  Every change executed
+in the RStudio editor
+can be committed and pushed to the repo.  Changes made elsewhere can be pulled into the project via git.
+It was necessary to use a personal access token to control the access.
