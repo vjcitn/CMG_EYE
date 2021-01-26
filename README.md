@@ -39,11 +39,23 @@ AnVIL RStudio will run git commands to populate a folder of your workspace's dis
 
 ### Compile `cmgeye.Rmd`
 
-Click on the `cmgeye.Rmd` file in the Files pane, and then in the upper left pane,
+To begin, use the Rstudio console to run `BiocManager::install("BiocStyle")` as it
+is useful for formatting the document we are aiming for. 
+
+After installation of BiocStyle completes, click on the `cmgeye.Rmd` file in the Files pane, and then in the upper left pane,
 use the `Knit to html_document` widget to generate and view HTML reporting
 on the CMG data.
 
+Some commands may require AnVIL_DEV group membership.  Set the chunks
+involving DRS resolution to eval=FALSE if an error related to permissions crops up.
+
 ### Use the `fhirinspector` app
+
+
+These commands may not work if you do not have
+access to `gs://bioc-anvildays-2021`.  Email stvjc
+at channing.harvard.edu if you are interested and authorized
+to work with this information.
 
 Use the commands
 ```
@@ -76,4 +88,3 @@ annotated, in multiple fields, with terms 'retinitis pigmentosa', 'RETINITIS PIG
 We can also use the Gen3 system to generate PFB (portable format for bioinformatics) using the second
 tab in the Gen3 explorer page.  This is returned as an Avro file, which can be parsed using sparklyr into
 a `spark_tbl` instance.
-
