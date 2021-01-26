@@ -1,51 +1,57 @@
-library(shiny)
-# expectation is that source("fhirinspect.R", echo=TRUE) is run in folder
-# holding the various WGS and WES projects, each holding a collection of JSON
-# documents
-
-allproj = dir()
-
-#x = readLines("AnVIL_CMG_Broad_Eye_Pierce_WGS/Observation.json")
-#dem = jsonlite::fromJSON(x[1])
-
-ui = fluidPage(
- sidebarLayout(
-  sidebarPanel(
-   helpText("AnVIL FHIR inspector"),
-   selectInput("project", "Projects", choices=allproj,
-     selected="AnVIL_CMG_Broad_Eye_Pierce_WGS"),
-   helpText("Available data:"),
-   uiOutput("found"), width=3
-   ),
-  mainPanel(
-   tabsetPanel(
-    tabPanel("jsonedit",
-      verbatimTextOutput("mfile"),
-      jsoneditOutput("myjs2")
-      )
-    )
-   )
-  )
- )
-
-server = function(input, output) {
- output$found = renderUI({
-  ans = dir(input$project, full=TRUE)
-  names(ans) = basename(ans)
-  radioButtons("file", "Selection", ans)
-  })
- output$mfile = renderPrint({
-  input$file
-  })
- output$myjs2 = renderJsonedit({
-  validate(need(length(input$file)>0, "waiting for selection"))
-  allrec = try(readLines(input$file))
-  validate(need(!inherits(allrec, "try-error"), "pick another file"))
-  alljs = lapply(allrec, function(x) jsonlite::fromJSON(txt=x))
-  jsonedit(alljs)
-  })
-}
-
-runApp(list(ui=ui, server=server))
+fhirinspector = function(path) {
+   od = getwd()
+   setwd(path)
+   on.exit(setwd(od))
+   require(shiny)
+   require(listviewer)
+   # expectation is that source("fhirinspect.R", echo=TRUE) is run in folder
+   # holding the various WGS and WES projects, each holding a collection of JSON
+   # documents
    
- 
+   allproj = dir()
+   
+   #x = readLines("AnVIL_CMG_Broad_Eye_Pierce_WGS/Observation.json")
+   #dem = jsonlite::fromJSON(x[1])
+   
+   ui = fluidPage(
+    sidebarLayout(
+     sidebarPanel(
+      helpText("AnVIL FHIR inspector"),
+      selectInput("project", "Projects", choices=allproj,
+        selected="AnVIL_CMG_Broad_Eye_Pierce_WGS"),
+      helpText("Available data:"),
+      uiOutput("found"), width=3
+      ),
+     mainPanel(
+      tabsetPanel(
+       tabPanel("jsonedit",
+         verbatimTextOutput("mfile"),
+         jsoneditOutput("myjs2")
+         )
+       )
+      )
+     )
+    )
+   
+   server = function(input, output) {
+    output$found = renderUI({
+     ans = dir(input$project, full=TRUE)
+     names(ans) = basename(ans)
+     radioButtons("file", "Selection", ans)
+     })
+    output$mfile = renderPrint({
+     input$file
+     })
+    output$myjs2 = renderJsonedit({
+     validate(need(length(input$file)>0, "waiting for selection"))
+     allrec = try(readLines(input$file))
+     validate(need(!inherits(allrec, "try-error"), "pick another file"))
+     alljs = lapply(allrec, function(x) jsonlite::fromJSON(txt=x))
+     jsonedit(alljs)
+     })
+   }
+   
+   runApp(list(ui=ui, server=server))
+}
+      
+    

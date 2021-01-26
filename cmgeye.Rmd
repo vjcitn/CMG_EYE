@@ -22,6 +22,7 @@ if (!("AnVIL" %in% ii)) BiocManager::install("AnVIL", update=FALSE, ask=FALSE)
 if (!("BiocStyle" %in% ii)) BiocManager::install("BiocStyle", update=FALSE, ask=FALSE)
 if (!("magick" %in% ii)) BiocManager::install("magick", update=FALSE, ask=FALSE)
 if (!("shiny" %in% ii )) BiocManager::install("shiny")
+if (!("listviewer" %in% ii )) BiocManager::install("listviewer")
 })
 })
 ```
