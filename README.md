@@ -5,8 +5,16 @@ Here's the 'dashboard description' for the AnVIL workspace
 
 ### Introduction
 
-This workspace was produced to illustrate use of **version control with git** to navigate
-several aspects of CMG metadata and data.
+This workspace was produced to illustrate exploration of CMG data in AnVIL using
+- **RStudio** to control all interactions
+- **version control with git** for all textual material related to the computations and the workspace
+- an **Rmarkdown document** specifying all aspects of 
+	- software extensions required
+	- data acquisition using the **AnVIL package** for Bioconductor
+	- interactive tabulation and visualization
+- a **shiny app** that explores available FHIR documents on a subset of CMG sequencing data
+
+### Resources and activities
 
 - https://github.com/vjcitn/CMG_EYE is a github repository with `cmgeye.Rmd` and `fhirinspect.R`.  The following steps
 will help you import the content from this github repository into your own AnVIL session/workspace.
@@ -29,12 +37,29 @@ AnVIL RStudio will run git commands to populate a folder of your workspace's dis
 
 ![files](https://storage.googleapis.com/bioc-anvil-images/files2.png)
 
+### Compile `cmgeye.Rmd`
+
+Click on the `cmgeye.Rmd` file in the Files pane, and then in the upper left pane,
+use the `Knit to html_document` widget to generate and view HTML reporting
+on the CMG data.
+
+### Use the `fhirinspector` app
+
+Use the commands
+```
+source("setup_fhirapp.R")
+setup_fhirapp(path=tempdir())
+```
+to copy and unzip a file of FHIR JSON.
+
+These can then be explored with
+```
+source("fhirinspect.R")
+fhirinspector(paste0(tempdir(), "/tmp/CMG"))
+```
 
 
-- make sure BiocStyle and AnVIL have been installed in the R environment before compiling cmgeye.Rmd
-- make sure shiny is installed before using fhirinspect.R
-
-### Testing gen3 export
+### The gen3 export process
 
 We've used `gen3.theanvil.io/explorer` to request data on 35 subjects from CMG:
 
@@ -51,3 +76,4 @@ annotated, in multiple fields, with terms 'retinitis pigmentosa', 'RETINITIS PIG
 We can also use the Gen3 system to generate PFB (portable format for bioinformatics) using the second
 tab in the Gen3 explorer page.  This is returned as an Avro file, which can be parsed using sparklyr into
 a `spark_tbl` instance.
+
